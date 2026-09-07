@@ -1,0 +1,266 @@
+---
+title: Encoder Server (embedded in native Linux, Windows, or iOS apps)
+description: Local-only LGS1920 video encoding dashboard
+---
+<!doctype html>
+<html lang="en" class="wa-theme-lgs1920 wa-brand-yellow wa-dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ description }}">
+    <link rel="icon" type="image/svg+xml" href="assets/logo/lgs1920-encoder-icon.svg">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="assets/main.css">
+    <script type="module" src="assets/main.js"></script>
+</head>
+<body>
+<wa-page mobile-breakpoint="768">
+    <header slot="header" class="topbar wa-split">
+        <div class="brand-group wa-cluster wa-gap-s">
+            <a class="studio-brand" href="https://lgs1920.fr" target="_blank" rel="external noopener noreferrer" aria-label="Open LGS1920 website">
+                <img class="studio-logo" src="assets/logo/lgs1920-studio.png" alt="LGS1920 Studio">
+            </a>
+            <span class="brand-separator" aria-hidden="true"></span>
+            <span class="brand" aria-label="Encoder">
+                <span class="brand-lockup wa-stack wa-gap-3xs">
+                    <strong>Encoder</strong>
+                </span>
+            </span>
+        </div>
+        <div class="wa-cluster wa-gap-xs wa-align-items-center">
+            <div class="theme-controls" aria-label="Appearance settings">
+                <wa-dropdown id="brand-color-menu" class="theme-palette-menu" placement="bottom-end">
+                    <wa-button id="brand-color-trigger" class="theme-menu-trigger" slot="trigger" appearance="filled-outlined" size="small" aria-label="Choose brand color">
+                        <span class="brand-color-swatch" data-brand-swatch data-brand-color="yellow"></span>
+                    </wa-button>
+                    <h3 class="theme-menu-heading">Brand color</h3>
+                    <wa-dropdown-item value="yellow" data-brand-option="yellow">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="yellow"></span><span>Yellow</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="orange" data-brand-option="orange">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="orange"></span><span>Orange</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="red" data-brand-option="red">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="red"></span><span>Red</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="pink" data-brand-option="pink">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="pink"></span><span>Pink</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="purple" data-brand-option="purple">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="purple"></span><span>Purple</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="blue" data-brand-option="blue">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="blue"></span><span>Blue</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="green" data-brand-option="green">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="green"></span><span>Green</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="gray" data-brand-option="gray">
+                        <span class="theme-option"><span class="brand-color-swatch" data-brand-color="gray"></span><span>Gray</span></span>
+                    </wa-dropdown-item>
+                </wa-dropdown>
+                <wa-dropdown id="theme-menu" class="theme-menu" placement="bottom-end">
+                    <wa-button id="theme-trigger" class="theme-menu-trigger" slot="trigger" appearance="filled-outlined" size="small" aria-label="Choose color mode">
+                        <wa-icon data-theme-icon="light" family="classic" variant="solid" name="sun" hidden></wa-icon>
+                        <wa-icon data-theme-icon="dark" family="classic" variant="solid" name="moon" hidden></wa-icon>
+                        <wa-icon data-theme-icon="system" family="classic" variant="solid" name="desktop" hidden></wa-icon>
+                    </wa-button>
+                    <h3 class="theme-menu-heading">Color mode</h3>
+                    <wa-dropdown-item value="system" data-theme-option="system">
+                        <span class="theme-option"><wa-icon family="classic" variant="solid" name="desktop"></wa-icon><span>System</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="light" data-theme-option="light">
+                        <span class="theme-option"><wa-icon family="classic" variant="solid" name="sun"></wa-icon><span>Light</span></span>
+                    </wa-dropdown-item>
+                    <wa-dropdown-item value="dark" data-theme-option="dark">
+                        <span class="theme-option"><wa-icon family="classic" variant="solid" name="moon"></wa-icon><span>Dark</span></span>
+                    </wa-dropdown-item>
+                </wa-dropdown>
+            </div>
+            <wa-badge id="connection-status" variant="neutral">Connecting</wa-badge>
+            <wa-button id="refresh-button" variant="neutral" appearance="outlined">
+                <wa-icon slot="start" name="arrows-rotate"></wa-icon>
+                Refresh
+            </wa-button>
+        </div>
+    </header>
+
+    <nav slot="navigation" class="wa-stack wa-gap-xs">
+        <span class="nav-title">Encoder</span>
+        <wa-button id="new-job-trigger" class="nav-new-job" variant="brand" data-dialog="open new-job-dialog" data-drawer="close">
+            <wa-icon slot="start" name="plus" label="New job"></wa-icon>
+            New job
+        </wa-button>
+        <a class="wa-cluster wa-gap-s" href="#jobs" data-drawer="close">
+            <wa-icon name="list-check" label="Jobs"></wa-icon>
+            Jobs
+        </a>
+        <a class="wa-cluster wa-gap-s" href="#logs" data-drawer="close">
+            <wa-icon name="rectangle-list" label="Logs"></wa-icon>
+            Logs
+        </a>
+        <wa-divider></wa-divider>
+        <a class="wa-cluster wa-gap-s" href="/swagger" target="_blank" rel="noopener noreferrer">
+            <wa-icon name="book-open" label="API documentation"></wa-icon>
+            API documentation
+        </a>
+        <span class="nav-note">
+            <wa-icon name="shield-halved" label="Local-only processing"></wa-icon>
+            Local-only processing
+        </span>
+    </nav>
+
+    <main>
+        <div class="page-content wa-stack wa-gap-xl">
+            <section class="hero wa-stack wa-gap-s">
+                <p class="eyebrow">LOCAL VIDEO WORKER</p>
+                <h1>Encode media on this computer</h1>
+                <p class="hero-copy">Monitor local encoding tasks, inspect activity, and download finished MP4 files. Media never leaves this machine.</p>
+            </section>
+
+            <section class="stats-grid wa-grid wa-gap-m" aria-label="Encoding summary">
+                <wa-card class="stat-card wa-stack wa-gap-2xs">
+                    <span class="stat-label">Active</span>
+                    <strong id="active-count" class="stat-value">0</strong>
+                    <span class="stat-note">Queued or encoding</span>
+                </wa-card>
+                <wa-card class="stat-card wa-stack wa-gap-2xs">
+                    <span class="stat-label">Completed</span>
+                    <strong id="completed-count" class="stat-value">0</strong>
+                    <span class="stat-note">Ready to download</span>
+                </wa-card>
+                <wa-card class="stat-card wa-stack wa-gap-2xs">
+                    <span class="stat-label">Failed</span>
+                    <strong id="failed-count" class="stat-value">0</strong>
+                    <span class="stat-note">Needs attention</span>
+                </wa-card>
+                <wa-card class="stat-card wa-stack wa-gap-2xs">
+                    <span class="stat-label">Service</span>
+                    <strong id="service-address" class="stat-value stat-value-small">127.0.0.1</strong>
+                    <span class="stat-note">Loopback only</span>
+                </wa-card>
+            </section>
+
+            <section class="dashboard-grid">
+                <wa-card class="dashboard-card current-card">
+                    <h2 slot="header">Current activity</h2>
+                    <div id="current-job" class="wa-stack wa-gap-m">
+                        <div class="empty-state wa-stack wa-gap-xs wa-align-items-center">
+                            <wa-icon name="circle-check" label="No active job"></wa-icon>
+                            <strong>No active job</strong>
+                            <span>Start an encoding to see live progress here.</span>
+                        </div>
+                    </div>
+                </wa-card>
+            </section>
+
+            <section id="jobs" class="wa-stack wa-gap-m">
+                <div class="section-heading wa-split wa-align-items-end">
+                    <div class="wa-stack wa-gap-2xs">
+                        <h2>Encoding jobs</h2>
+                        <p>Jobs are kept in memory while the encoder is running.</p>
+                    </div>
+                    <wa-badge id="job-count" variant="neutral">0 jobs</wa-badge>
+                </div>
+                <wa-card class="jobs-card">
+                    <wa-scroller orientation="horizontal">
+                        <table class="jobs-table">
+                            <caption class="wa-visually-hidden">Local encoding jobs</caption>
+                            <thead>
+                            <tr>
+                                <th scope="col">Job</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Progress</th>
+                                <th scope="col">Created</th>
+                                <th scope="col"><span class="wa-visually-hidden">Actions</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="jobs-body">
+                            <tr>
+                                <td colspan="5" class="table-empty">No jobs yet</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </wa-scroller>
+                </wa-card>
+            </section>
+
+            <section id="logs" class="wa-stack wa-gap-m">
+                <div class="section-heading wa-split wa-align-items-end">
+                    <div class="wa-stack wa-gap-2xs">
+                        <h2>Activity log</h2>
+                        <p>Local service and job events from this process.</p>
+                    </div>
+                    <wa-button id="clear-log-button" variant="neutral" appearance="plain">Clear view</wa-button>
+                </div>
+                <wa-card class="log-card">
+                    <pre id="log-output" class="log-output" tabindex="0" aria-live="polite">Waiting for the local encoder...</pre>
+                </wa-card>
+            </section>
+        </div>
+    </main>
+
+    <wa-dialog id="new-job-dialog" class="new-job-dialog" label="Start an encoding job">
+        <form id="job-form" class="wa-stack wa-gap-l">
+            <label class="file-picker">
+                <span class="field-label">Input media</span>
+                <input id="file-input" type="file" accept="video/*,audio/*" required>
+                <span id="file-name" class="field-hint">Choose a local video or audio file</span>
+            </label>
+            <div class="wa-grid wa-gap-m option-grid">
+                <wa-select id="quality-input" label="Quality" value="medium">
+                    <wa-option value="low">Low</wa-option>
+                    <wa-option value="medium">Medium</wa-option>
+                    <wa-option value="high">High</wa-option>
+                    <wa-option value="very-high">Very high</wa-option>
+                </wa-select>
+                <wa-select id="acceleration-input" label="Acceleration" value="no-preference">
+                    <wa-option value="no-preference">Automatic</wa-option>
+                    <wa-option value="prefer-hardware">Prefer hardware</wa-option>
+                    <wa-option value="prefer-software">Prefer software</wa-option>
+                </wa-select>
+                <wa-input id="width-input" label="Width" type="number" min="2" max="7680" step="2" placeholder="Original"></wa-input>
+                <wa-input id="height-input" label="Height" type="number" min="2" max="7680" step="2" placeholder="Original"></wa-input>
+            </div>
+            <output id="form-message" class="form-message" aria-live="polite"></output>
+            <div class="wa-cluster wa-gap-s wa-justify-content-end">
+                <wa-button type="button" variant="neutral" appearance="outlined" data-dialog="close">Cancel</wa-button>
+                <wa-button id="submit-button" type="submit" variant="brand">
+                    <wa-icon slot="start" name="play"></wa-icon>
+                    Start encoding
+                </wa-button>
+            </div>
+        </form>
+    </wa-dialog>
+
+    <wa-dialog id="comparison-dialog" class="video-comparison-dialog" label="Compare source and encoded video">
+        <div class="comparison-content wa-stack wa-gap-m">
+            <p id="comparison-status" class="field-hint" aria-live="polite">Loading the encoded video...</p>
+            <div class="video-comparison-stage">
+                <wa-comparison id="video-comparison" position="50">
+                    <video id="before-video" class="comparison-video" slot="before" controls playsinline preload="metadata" aria-label="Original video"></video>
+                    <video id="after-video" class="comparison-video" slot="after" controls playsinline preload="metadata" aria-label="Encoded video"></video>
+                </wa-comparison>
+                <div class="video-comparison-labels" aria-hidden="true">
+                    <span id="comparison-before-label">WebM</span>
+                    <span id="comparison-after-label">MP4</span>
+                </div>
+            </div>
+            <div class="comparison-timeline wa-stack wa-gap-2xs">
+                <div class="wa-cluster wa-gap-s wa-align-items-center wa-justify-content-between">
+                    <span class="field-label">Synchronized timeline</span>
+                    <output id="comparison-time-label" class="field-hint">0:00.00 / 0:00.00</output>
+                </div>
+                <wa-slider id="comparison-time-slider" label="Move both videos to this time" min="0" max="5" step="0.01" value="0" with-tooltip></wa-slider>
+            </div>
+        </div>
+        <wa-button slot="footer" variant="brand" data-dialog="close">Close</wa-button>
+    </wa-dialog>
+
+    <footer slot="footer" class="footer wa-split">
+        <span>Encoder v{{ appVersion }}</span>
+        <span>All processing stays on this computer</span>
+    </footer>
+</wa-page>
+</body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+.idea/
+.env
+.env.*
+!.env.example
+dist/
+public/
+.build/
+.11ty-vite/
+coverage/
+.encoder-data/
+*.log

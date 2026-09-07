@@ -1,0 +1,557 @@
+/*
+ * This file is part of the LGS1920/encoder project.
+ *
+ * File: styles.css
+ *
+ * Author : LGS1920 Team
+ * email: studio@lgs1920.fr
+ *
+ * Created on: 2026-09-07
+ * Last modified: 2026-09-07
+ *
+ * Copyright © 2026 LGS1920
+ */
+
+html,
+body {
+    min-block-size: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--wa-font-family-body, 'Noto Sans', 'Open Sans', sans-serif);
+    background: var(--wa-color-surface-lowered);
+    color: var(--wa-color-text-normal);
+}
+
+wa-page::part(main-content) {
+    padding: 0;
+}
+
+wa-page {
+    min-block-size: 100vh;
+}
+
+main {
+    padding: 0;
+}
+
+.topbar,
+.footer,
+.page-content {
+    padding-inline: var(--wa-space-xl);
+}
+
+.topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--wa-space-m);
+    background: var(--wa-color-surface-default);
+    border-block-end: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+}
+
+.brand-group {
+    min-inline-size: 0;
+    flex: 1 1 auto;
+}
+
+.topbar > .wa-cluster {
+    min-inline-size: 0;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.theme-controls {
+    display: none;
+    align-items: center;
+    gap: var(--wa-space-2xs);
+}
+
+.theme-menu-trigger::part(button) {
+    inline-size: var(--wa-space-2xl);
+    block-size: var(--wa-space-2xl);
+    padding: 0;
+    border-radius: var(--wa-border-radius-m);
+    color: var(--wa-color-text-quiet);
+}
+
+.theme-menu-trigger:hover::part(button),
+.theme-menu-trigger:focus-visible::part(button) {
+    border-color: var(--wa-color-surface-border);
+    color: var(--wa-color-brand);
+    background: var(--wa-color-surface-lowered);
+}
+
+.theme-menu-trigger wa-icon {
+    color: currentColor;
+    font-size: var(--wa-font-size-l);
+}
+
+@media (min-width: 68rem) {
+    .theme-controls {
+        display: inline-flex;
+    }
+}
+
+.brand {
+    min-inline-size: 0;
+    color: var(--wa-color-text-normal);
+    font-weight: var(--wa-font-weight-semibold);
+    text-decoration: none;
+}
+
+.studio-brand {
+    display: inline-flex;
+    align-items: center;
+    max-inline-size: 9rem;
+}
+
+.studio-logo {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+}
+
+.brand-separator {
+    align-self: stretch;
+    inline-size: var(--wa-border-width-s);
+    background: var(--wa-color-surface-border);
+}
+
+.brand-lockup {
+    line-height: var(--wa-line-height-condensed);
+}
+
+.brand-lockup strong {
+    font-size: var(--wa-font-size-m);
+    letter-spacing: var(--wa-letter-spacing-s, 0.04em);
+}
+
+.brand-lockup small {
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-2xs);
+    font-weight: var(--wa-font-weight-semibold);
+    letter-spacing: var(--wa-letter-spacing-m, 0.12em);
+}
+
+[slot='navigation'] {
+    padding: var(--wa-space-l);
+}
+
+.nav-new-job {
+    inline-size: 100%;
+}
+
+.nav-title,
+.eyebrow,
+.stat-label {
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-xs);
+    font-weight: var(--wa-font-weight-semibold);
+    text-transform: uppercase;
+}
+
+[slot='navigation'] a {
+    color: var(--wa-color-text-normal);
+    text-decoration: none;
+}
+
+[slot='navigation'] a:hover,
+[slot='navigation'] a:focus-visible {
+    color: var(--wa-color-text-link);
+}
+
+.nav-note,
+.field-hint,
+.stat-note,
+.section-heading p,
+.hero-copy,
+.empty-state span {
+    color: var(--wa-color-text-quiet);
+}
+
+.nav-note {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--wa-space-xs);
+    font-size: var(--wa-font-size-s);
+}
+
+.page-content {
+    inline-size: 100%;
+    max-inline-size: 96rem;
+    box-sizing: border-box;
+    margin-inline: auto;
+    padding-block: var(--wa-space-2xl) var(--wa-space-4xl);
+}
+
+.hero {
+    border-inline-start: var(--wa-border-width-l) solid var(--wa-color-brand);
+    padding-inline-start: var(--wa-space-l);
+}
+
+.hero {
+    padding-block: var(--wa-space-l);
+}
+
+.hero h1,
+.section-heading h2,
+.dashboard-card h2 {
+    margin: 0;
+}
+
+.hero h1 {
+    font-size: var(--wa-font-size-3xl);
+}
+
+.hero-copy {
+    max-inline-size: 62ch;
+    margin: 0;
+    font-size: var(--wa-font-size-l);
+}
+
+.stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.stat-card {
+    --spacing: var(--wa-space-m); /* Compact spacing for dashboard summary cards. */
+}
+
+.stat-card,
+.dashboard-card,
+.jobs-card,
+.log-card {
+    min-inline-size: 0;
+}
+
+.stat-value {
+    font-size: var(--wa-font-size-2xl);
+    line-height: 1;
+}
+
+.stat-value-small {
+    font-size: var(--wa-font-size-l);
+}
+
+.file-picker {
+    display: grid;
+    gap: var(--wa-space-xs);
+}
+
+.field-label {
+    font-weight: var(--wa-font-weight-semibold);
+}
+
+.file-picker input[type='file'] {
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding: var(--wa-space-s);
+    border: var(--wa-border-width-s) dashed var(--wa-color-surface-border);
+    border-radius: var(--wa-border-radius-m);
+    background: var(--wa-color-surface-lowered);
+    color: var(--wa-color-text-normal);
+    font: inherit;
+}
+
+.file-picker input[type='file']:focus-visible {
+    outline: var(--wa-focus-ring);
+    outline-offset: var(--wa-space-3xs);
+}
+
+.option-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.form-message {
+    color: var(--wa-color-text-quiet);
+}
+
+.form-message.error {
+    color: var(--wa-color-danger-on-quiet);
+}
+
+.current-card {
+    min-block-size: 100%;
+}
+
+.empty-state {
+    min-block-size: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+.empty-state wa-icon {
+    color: var(--wa-color-success-on-quiet);
+    font-size: var(--wa-font-size-2xl);
+}
+
+.active-job-title {
+    overflow-wrap: anywhere;
+    font-weight: var(--wa-font-weight-semibold);
+}
+
+.job-progress {
+    --track-height: var(--wa-space-s); /* Keep progress readable across the dashboard. */
+    --track-color: var(--wa-color-neutral-fill-quiet); /* Neutral progress background. */
+    --indicator-color: var(--wa-color-brand-fill-loud); /* Brand progress indicator. */
+}
+
+wa-slider {
+    --track-size: var(--wa-space-s);
+}
+
+.section-heading p {
+    margin: 0;
+}
+
+.section-heading {
+    flex-wrap: wrap;
+    gap: var(--wa-space-s);
+}
+
+.jobs-table {
+    inline-size: 100%;
+    border-collapse: collapse;
+}
+
+.jobs-table th,
+.jobs-table td {
+    padding: var(--wa-space-s) var(--wa-space-m);
+    border-block-end: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+    text-align: start;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.jobs-table th {
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-xs);
+    font-weight: var(--wa-font-weight-semibold);
+    text-transform: uppercase;
+}
+
+.jobs-table tr:last-child td {
+    border-block-end: 0;
+}
+
+.job-id {
+    max-inline-size: 18ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-progress-cell {
+    min-inline-size: 18ch;
+}
+
+.job-actions {
+    justify-content: flex-start;
+}
+
+.theme-menu-heading {
+    margin: var(--wa-space-s) var(--wa-space-m) var(--wa-space-2xs);
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-xs);
+    font-weight: var(--wa-font-weight-semibold);
+    letter-spacing: var(--wa-letter-spacing-s, 0.04em);
+    text-transform: uppercase;
+}
+
+.theme-option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--wa-space-s);
+}
+
+[data-brand-option][data-selected] .theme-option,
+[data-theme-option][data-selected] .theme-option {
+    color: var(--wa-color-brand);
+    font-weight: var(--wa-font-weight-semibold);
+}
+
+.brand-color-swatch {
+    display: inline-block;
+    flex: 0 0 auto;
+    inline-size: var(--wa-space-s);
+    block-size: var(--wa-space-s);
+    border: var(--wa-border-width-s) solid var(--wa-color-neutral-border-normal);
+    border-radius: var(--wa-border-radius-s);
+    background: var(--wa-color-brand);
+}
+
+.brand-color-swatch[data-brand-color='yellow'] {
+    background: var(--wa-color-yellow);
+}
+
+.brand-color-swatch[data-brand-color='orange'] {
+    background: var(--wa-color-orange);
+}
+
+.brand-color-swatch[data-brand-color='red'] {
+    background: var(--wa-color-red);
+}
+
+.brand-color-swatch[data-brand-color='pink'] {
+    background: var(--wa-color-pink);
+}
+
+.brand-color-swatch[data-brand-color='purple'] {
+    background: var(--wa-color-purple);
+}
+
+.brand-color-swatch[data-brand-color='blue'] {
+    background: var(--wa-color-blue);
+}
+
+.brand-color-swatch[data-brand-color='green'] {
+    background: var(--wa-color-green);
+}
+
+.brand-color-swatch[data-brand-color='gray'] {
+    background: var(--wa-color-gray);
+}
+
+.video-comparison-dialog {
+    --width: min(64rem, calc(100vw - 2rem));
+}
+
+.new-job-dialog {
+    --width: min(44rem, calc(100vw - 2rem));
+}
+
+.video-comparison-dialog::part(dialog),
+.new-job-dialog::part(dialog) {
+    border: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+    border-radius: var(--wa-border-radius-l);
+    background-color: var(--wa-color-surface-raised);
+    box-shadow: var(--wa-shadow-xl, var(--wa-shadow-l));
+}
+
+.comparison-content {
+    min-inline-size: 0;
+}
+
+.comparison-timeline {
+    padding: var(--wa-space-s) var(--wa-space-m);
+    border: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+    border-radius: var(--wa-border-radius-m);
+    background: var(--wa-color-surface-lowered);
+}
+
+.comparison-timeline wa-slider {
+    --track-size: var(--wa-space-s);
+}
+
+.video-comparison-stage {
+    position: relative;
+    overflow: hidden;
+    border: var(--wa-border-width-s) solid var(--wa-color-surface-border);
+    border-radius: var(--wa-border-radius-m);
+    background: var(--wa-color-surface-lowered);
+}
+
+.video-comparison-stage wa-comparison {
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    --handle-size: 3rem;
+}
+
+.comparison-video {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+    background: var(--wa-color-surface-lowered);
+}
+
+.video-comparison-labels {
+    position: absolute;
+    inset-block-start: var(--wa-space-s);
+    inset-inline: var(--wa-space-s);
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.video-comparison-labels span {
+    padding: var(--wa-space-3xs) var(--wa-space-xs);
+    border-radius: var(--wa-border-radius-s);
+    background: color-mix(in srgb, var(--wa-color-surface-default) 88%, transparent);
+    color: var(--wa-color-text-normal);
+    font-size: var(--wa-font-size-xs);
+    font-weight: var(--wa-font-weight-semibold);
+}
+
+
+.table-empty {
+    color: var(--wa-color-text-quiet);
+    text-align: center !important;
+}
+
+.log-output {
+    max-block-size: 32ch;
+    margin: 0;
+    overflow: auto;
+    padding: var(--wa-space-m);
+    background: var(--wa-color-surface-lowered);
+    color: var(--wa-color-text-normal);
+    font-family: var(--wa-font-family-code);
+    font-size: var(--wa-font-size-s);
+    line-height: var(--wa-line-height-expanded);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.footer {
+    flex-wrap: wrap;
+    gap: var(--wa-space-s);
+    color: var(--wa-color-text-quiet);
+    font-size: var(--wa-font-size-xs);
+}
+
+[slot='navigation'] a[href='/swagger'] {
+    color: var(--wa-color-text-link);
+}
+
+wa-page[view='mobile'] .topbar,
+wa-page[view='mobile'] .footer,
+wa-page[view='mobile'] .page-content {
+    padding-inline: var(--wa-space-l);
+}
+
+wa-page[view='mobile'] .topbar > .wa-cluster {
+    inline-size: 100%;
+    justify-content: flex-start;
+}
+
+wa-page[view='mobile'] .page-content {
+    padding-block-start: var(--wa-space-xl);
+}
+
+wa-page[view='mobile'] .hero {
+    padding-block: var(--wa-space-s);
+    padding-inline-start: var(--wa-space-m);
+}
+
+wa-page[view='mobile'] .hero-copy {
+    font-size: var(--wa-font-size-m);
+}
+
+wa-page[view='mobile'] .option-grid {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+wa-page[view='mobile'] .jobs-table th,
+wa-page[view='mobile'] .jobs-table td {
+    padding-inline: var(--wa-space-s);
+}
+
+wa-page[view='mobile'] .hero h1 {
+    font-size: var(--wa-font-size-2xl);
+}

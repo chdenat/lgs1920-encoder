@@ -1,0 +1,73 @@
+name: Publish encoder release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            command: build:linux
+            artifact: encoder-linux-x64
+          - os: ubuntu-24.04-arm
+            command: build:linux-arm64
+            artifact: encoder-linux-arm64
+          - os: windows-latest
+            command: build:windows
+            artifact: encoder-windows-x64
+          - os: windows-latest
+            command: build:windows-arm64
+            artifact: encoder-windows-arm64
+          - os: macos-13
+            command: build:macos-x64
+            artifact: encoder-macos-x64
+          - os: macos-14
+            command: build:macos
+            artifact: encoder-macos-arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Verify version and test
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          package_version=$(bun -e "console.log((await Bun.file('package.json').json()).version)")
+          test "$package_version" = "${RELEASE_TAG#v}"
+          bun run typecheck
+          bun test
+      - name: Build executable
+        run: bun run ${{ matrix.command }}
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all executables
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release-assets/* --verify-tag --title "$GITHUB_REF_NAME" --generate-notes

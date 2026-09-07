@@ -19,6 +19,25 @@ The default endpoint is `http://127.0.0.1:47832`. At startup, the application op
 
 The local dashboard is rendered from the Eleventy template `src/ui/index.liquid`, with its interactive TypeScript bundle and CSS generated locally. It is available at `http://127.0.0.1:47832/` and shows active jobs, progress, errors, logs, and download actions. It includes the LGS1920 Web Awesome theme, persistent color mode and brand color menus, and synchronized video comparison. The independent frame demo runs from the sibling `encoder-frame-demo` application at `http://127.0.0.1:47833/`. See [Explanation and usage](docs/EXPLANATION-AND-USAGE.md) for the walkthrough and [Architecture](docs/ARCHITECTURE.md) for the detailed design.
 
+## Standalone frame demo
+
+The [LGS1920 Encoder Frame Demo](https://github.com/chdenat/lgs1920-encoder-frame-demo) is a separate Eleventy application that demonstrates the raw-frame API in a browser. It initializes a frame stream, captures the source one frame at a time, sends individual RGBA frames to this encoder, displays each request and the progress state, then plays the reconstructed output inside the same application.
+
+Start the encoder first, then start the demo from its own repository:
+
+```bash
+# Terminal 1: this encoder repository
+bun run start
+
+# Terminal 2: https://github.com/chdenat/lgs1920-encoder-frame-demo
+bun install
+bun run start
+```
+
+The demo checks `http://127.0.0.1:47832/health` before opening its browser window and before each capture. If the encoder is not running, the demo server exits instead of starting. The demo serves its own interface on `http://127.0.0.1:47833` and proxies only its local `/encoder/*` API calls to the encoder; the encoder dashboard is not used for playback.
+
+The demo contains multiple capture scenarios and samples at 30 fps by default. The UI supports 2, 5, 10, 15, 30, and 60 fps, along with capture size, output size, quality, acceleration, and capture pacing controls. The frame protocol used by the demo is documented below in [the raw RGBA frames API](#raw-rgba-frames-api).
+
 ## API
 
 The health endpoint is public and does not expose the session token:
@@ -47,6 +66,8 @@ curl -X POST http://127.0.0.1:47832/v1/jobs \
 ```
 
 The response contains a job identifier. Poll `GET /v1/jobs/:id` for status or consume `GET /v1/jobs/:id/events` for server-sent progress events. The final file is available at `GET /v1/jobs/:id/output`. `DELETE /v1/jobs/:id` cancels a queued or active job.
+
+### Raw RGBA frames API
 
 The API also accepts individual raw RGBA frames. Create a frame job with `POST /v1/jobs` and a JSON body containing `type: "frames"`, an even `width` and `height`, a `frameRate`, and a `frameCount`. Send each frame as an `application/octet-stream` body to `POST /v1/jobs/:id/frames` with its zero-based `X-Frame-Index`, then call `POST /v1/jobs/:id/complete`. The job response reports `phase`, `receivedFrames`, and `progress`; frame upload uses the first half of the progress range and MP4 encoding uses the second half. Ten frames at 2 fps produce a five-second video. See [Explanation and usage](docs/EXPLANATION-AND-USAGE.md) for the complete frame protocol.
 
